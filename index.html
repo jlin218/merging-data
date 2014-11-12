@@ -9,50 +9,45 @@
         <link rel="stylesheet" href="css/main.css">
         <link rel="icon" href="img/site-icon.png">
 
-        <!-- hot link to minified Angular library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.1/angular.min.js"></script>
-        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.1/angular.min.js"></script>        
     </head>
-    <body>
+    <body ng-app="AddressBook" ng-controller="AddressController">
         <main class="container-fluid">
             <header class="page-title">
                 <h1>City of Pawnee Address Book</h1>
             </header>
-
+            
             <section>
-                <!-- sort buttons; you will add attributes and code to make them resort the list -->
                 <div class="sort-ui">
                     <span>Sort By: </span>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default">Last Name</button>
-                        <button type="button" class="btn btn-default">First Name</button>
-                        <button type="button" class="btn btn-default">Department</button>
+                        <button type="button" ng-click = "orderedBy('lastName')" ng-class="{active: isOrderedBy('lastName')}" ng-class="btn btn-default">Last Name</button>
+                        <button type="button" ng-click = "orderedBy('firstName')" ng-class="{active: isOrderedBy('firstName')}" ng-class="btn btn-default">First Name</button>
+                        <button type="button" ng-click = "orderedBy('department')" ng-class="{active: isOrderedBy('department')}" ng-class="btn btn-default">Department</button>
                     </div>
                 </div>
-                <!-- filter input; you will add attributes to make this filter the list based on value entered -->
                 <div class="filter-ui">
-                    <input type="text" class="form-control" placeholder="Search...">
+                    <input type="search" class="form-control" placeholder="Search..." ng-model="searchThrough" >
                 </div>
             </section>
 
             <section>
-                <ul class="cards">
+                <ul class="cards" ng-repeat="employee in employees | filter:searchThrough | orderBy:order">
                     <li class="card">
-                        <!-- this img should show the employee picture --> 
-                        <img alt="">
+                        <img ng-src="{{employee.picUrl}}" alt='picture of + {{employee.firstName}} {{employee.lastName}}'>
+                        </img>
                         <div class="details">
-                            <h2 class="name"> <!-- employee name goes here --> </h2>
-                            <p class="title"> <!-- employee title goes here --> </p>
-                            <p class="department"> <!-- employee department goes here --> </p>
-                            <p class="phone"><a> <!-- employee phone goes here (if present); hyperlink should dial number on mobile phone --> </a></p>
-                            <p class="email"><a> <!-- employee email goes here (if present); hyperlink should open a new email to email address --> </a></p>
+                            <h2 class="name">{{employee.firstName}} {{employee.lastName}}</h2>
+                            <p class="title">{{employee.title}}</p>
+                            <p class="department">{{employee.department}}</p>                
+                            <p class="phone" ng-if="employee.hasOwnProperty('phone')"><a ng-href= 'tel:+'{{employee.phone}}>{{employee.phone}}</a></p>
+                            <p class="email" ng-if="employee.hasOwnProperty('email')"><a ng-href='mailto:+'{{employee.email}}>{{employee.email}}</a></p>
                         </div>
                     </li>
                 </ul>
             </section>
             
         </main>
-
         <!-- link to employee data
         this adds a global variable named 'pawneeEmployees', which is an array of objects (see js/employees.js file)
         -->
